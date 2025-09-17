@@ -57,8 +57,8 @@ project-root/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Stennis1/tts-aws-cloud-project.git
-cd tts-aws-cloud-project
+git clone https://github.com/priscillaon/polly-project-azubi.git
+cd polly-project-azubi
 ````
 
 ### 2. Configure AWS credentials
