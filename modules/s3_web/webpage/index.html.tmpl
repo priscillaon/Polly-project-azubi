@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | Text-To-Speech Converter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="logo-32.png" alt="TTS" width="28" height="28" class="rounded">
+      <span class="fw-bold">TTS Converter</span>
+    </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item home"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item item"><a class="nav-link" href="add.html">Add Item</a></li>
+          <li class="nav-item pricing"><a class="nav-link" href="pricing.html">Pricing</a></li>
+          <li class="nav-item signin"><a class="nav-link" href="signin.html">Sign In</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="mb-3 text-center bg-light">
+    <div class="container py-3">
+      <h1 class="fw-bold mt-4">Text To Speech Converter</h1>
+      <p class="lead">Convert text to speech with ease. Explore below.</p>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <div class="container mb-2">
+    <div class="row g-4">
+      <div class="card shadow-sm h-80 mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+          <div class="mb-2">
+            <label for="text-area" class="mb-2 fw-bold">Enter text for speech conversion</label>
+            <textarea class="form-control" id="text-area" rows="10" aria-label="Enter text for speech conversion"></textarea>
+          </div>
+
+          <div class="row mb-3 g-2 align-items-center">
+            <div class="col-md-4">
+              <label for="voiceSelect" class="form-label fw-bold">Voice Persona</label>
+              <select id="voiceSelect" class="form-select">
+                <optgroup label="English (US)">
+                  <option value="Joanna">Joanna (F)</option>
+                  <option value="Matthew">Matthew (M)</option>
+                  <option value="Ivy">Ivy (F)</option>
+                  <option value="Kendra">Kendra (F)</option>
+                  <option value="Salli">Salli (F)</option>
+                  <option value="Joey">Joey (M)</option>
+                </optgroup>
+                <optgroup label="English (British)">
+                  <option value="Amy">Amy (F)</option>
+                  <option value="Emma">Emma (F)</option>
+                  <option value="Brian">Brian (M)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="speedSelect" class="form-label fw-bold">Voice Rate</label>
+              <select id="speedSelect" class="form-select">
+                <option value="1.0">Normal</option>
+                <option value="0.8">Slow</option>
+                <option value="1.2">Fast</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="pitchSelect" class="form-label fw-bold">Tone</label>
+              <select id="pitchSelect" class="form-select">
+                <option value="0%">Normal</option>
+                <option value="+10%">High</option>
+                <option value="-10%">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-flex mb-3 align-items-center">
+            <button class="btn btn-primary btn-sm me-3" id="convertBtn">Convert to Speech</button>
+            <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center mb-3">
+            <button class="btn btn-success text-center btn-sm" id="downloadBtn" disabled>Download Audio</button>
+          </div>
+
+          <!-- Audio Player Section (hidden until audio is ready) -->
+          <div id="audioSection" class="d-none flex-column align-items-center mb-3">
+            <audio id="audioPlayer" controls class="w-100 mb-2"></audio>
+
+            <div class="d-flex align-items-center w-100">
+              <label for="volumeControl" class="me-2 fw-bold mb-0">Volume</label>
+              <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" class="form-range flex-grow-1 me-2">
+              <span id="volumeValue" class="fw-bold">50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-3 footer mt-auto">
+    <div class="mt-4 container d-flex flex-column flex-md-row justify-content-between">
+      <p>&copy; Copyright - 2025</p>
+      <p>Generation Ghana | Azubi Africa</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const apiBase = "${api_base_url}";
+    let lastAudioBase64 = "";
+    let lastAudioS3Url = "";
+
+    const audioSection = document.getElementById("audioSection");
+    const audioPlayer = document.getElementById("audioPlayer");
+    const volumeControl = document.getElementById("volumeControl");
+    const volumeValue = document.getElementById("volumeValue");
+
+    // Volume control setup
+    audioPlayer.volume = volumeControl.value;
+    volumeControl.addEventListener("input", () => {
+      audioPlayer.volume = volumeControl.value;
+      volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
+    });
+
+    document.getElementById("convertBtn").addEventListener("click", async () => {
+      const text = document.getElementById("text-area").value || "Hello from AWS Polly!";
+      const voice = document.getElementById("voiceSelect").value;
+      const rate = document.getElementById("speedSelect").value;
+      const pitch = document.getElementById("pitchSelect").value;
+
+      const loadingSpinner = document.getElementById("loadingSpinner");
+      loadingSpinner.classList.remove("d-none");
+
+      try {
+        const response = await fetch(apiBase, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, voice, rate, pitch })
+        });
+
+        const data = await response.json();
+
+        if (data.audio_base64) {
+          lastAudioBase64 = data.audio_base64;
+          audioPlayer.src = "data:audio/mp3;base64," + lastAudioBase64;
+          audioSection.classList.remove("d-none"); // show audio player
+          audioPlayer.play();
+          document.getElementById("downloadBtn").disabled = false;
+        }
+
+        if (data.s3_presigned_url) {
+          lastAudioS3Url = data.s3_presigned_url;
+        }
+      } catch (err) {
+        console.error("Error generating speech:", err);
+        alert("Error generating speech. Check console.");
+      } finally {
+        loadingSpinner.classList.add("d-none");
+      }
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      if (lastAudioS3Url) {
+        window.open(lastAudioS3Url, "_blank");
+      } else if (lastAudioBase64) {
+        const link = document.createElement("a");
+        link.href = "data:audio/mp3;base64," + lastAudioBase64;
+        link.download = "tts_audio.mp3";
+        link.click();
+      } else {
+        alert("No audio available yet. Generate speech first.");
+      }
+    });
+  </script>
+</body>
+</html>
