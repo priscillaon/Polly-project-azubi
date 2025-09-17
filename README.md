@@ -1,12 +1,12 @@
-# AWS Text-to-Speech Website (Terraform + Polly + API Gateway)
+# Text-to-Speech Webpage on AWS (Terraform + Polly + API Gateway)
 
-This project provisions a **serverless text-to-speech (TTS) web application** using **Terraform** and AWS services.  
-Users can input text in a web page, which is sent to an **API Gateway → Lambda → Amazon Polly** pipeline.  
-Polly generates speech audio (MP3), stores it in S3, and the response is sent back for immediate playback.
+Using **Terraform** and AWS services, this project sets up a **serverless text-to-speech (TTS) web application**.  
+Web pages allow users to enter text, which is then routed to a **API Gateway → Lambda → Amazon Polly** pipeline.  
+After creating speech audio (MP3) and storing it in S3, Polly sends the response back for instant replay.
 
 ---
 
-## 🚀 Architecture Overview
+## Architecture Overview
 
 - **Amazon S3**  
   - Hosts the static frontend (HTML, CSS, JS).  
@@ -14,15 +14,15 @@ Polly generates speech audio (MP3), stores it in S3, and the response is sent ba
 
 - **Amazon CloudFront**  
   - Distributes the static site globally.  
-  - Provides fast, secure HTTPS access to the frontend.  
+  - The frontend can be accessed quickly and securely using HTTPS.  
 
-- **AWS Lambda**  
-  - Runs Python code to call Amazon Polly.  
-  - Encodes audio, saves to S3, and returns Base64 audio to the frontend.  
+- **AWS Lambda**    
+  - Calls Amazon Polly using Python code.  
+  - Audio is encoded, saved to S3, and then returned to the frontend in Base64 format.   
 
 - **Amazon Polly**   
   - Supports multiple voices, pitch, and rate.  
-  - Converts user input text into speech.
+  - Transcodes text entered by the user into speech.
 
 - **Amazon API Gateway**  
   - Exposes a `/tts` POST endpoint.  
@@ -30,7 +30,7 @@ Polly generates speech audio (MP3), stores it in S3, and the response is sent ba
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 
@@ -52,7 +52,7 @@ project-root/
 ## Architecture Diagram 
 ![Architecture Diagram](./polly_architecturediagram/Text_to_speechproj.drawio.png) 
 
-## 🔧 Setup Instructions
+##  Setup Instructions
 
 ### 1. Clone the repository
 
@@ -102,31 +102,31 @@ This will create all resources (S3, CloudFront, Lambda, API Gateway).
 
 ---
 
-## 🌐 Access the Application
+Launch the application
 
-1. Open the **CloudFront domain URL** → website loads.
-2. Enter text and click **Play** → API Gateway forwards it to Lambda.
-3. Lambda calls **Polly**, stores audio in S3, and returns Base64.
-4. Browser decodes audio and plays instantly.
-
----
-
-## 📌 Future Improvements
-
-- Add authentication for API Gateway (Cognito, API keys).
-- Serve API via CloudFront under the same domain as the website.
-- Support file download of MP3 audio.
-- Add frontend options for pitch/rate/voice selection.
+1. The website loads when you open the **CloudFront domain URL**.
+2. Click **Play** after entering text, and the API Gateway will send it to Lambda.
+3. Lambda returns Base64 after calling **Polly** and storing the audio in S3.
+4. The browser automatically plays the audio after decoding it.
 
 ---
 
-## ⚠️ Costs & Cleanup
+## Upcoming Enhancements
 
-This project uses AWS services that may incur costs:
+- Add API Gateway authentication (Cognito, API keys).
+CloudFront is used to provide the API under the same domain as the website.
+Support for MP3 audio file downloads.
+Provide front-end choices for voice, pitch, and pace.
 
-- Polly requests, API Gateway, Lambda, CloudFront, and S3 storage.
+---
 
-To delete all resources:
+## Price & Cleaning
+
+This project makes use of AWS services, which could be expensive:
+
+S3 storage, Lambda, CloudFront, Polly requests, and API Gateway.
+
+To remove every resource:
 
 ```bash
 terraform destroy
@@ -134,7 +134,7 @@ terraform destroy
 
 ---
 
-## 🛠 Tools & Versions
+##  Tools & Versions
 
 - **Terraform** ≥ 1.6
 - **AWS CLI** ≥ 2.x
