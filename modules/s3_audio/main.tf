@@ -44,3 +44,4 @@ output "audio_bucket_name" {
 output "audio_bucket_arn" {
   value = aws_s3_bucket.audio_files.arn
 }
+

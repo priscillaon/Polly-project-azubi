@@ -4,8 +4,8 @@ provider "aws" {
 
 module "s3_web" {
   source       = "./modules/s3_web"
-  bucket_name  = "polly-project-azubi-priscillaon"
-  api_base_url = "module.api_gateway.invoke_url"
+  bucket_name  = "tts-project-azubi-priscillaon"
+  api_base_url = module.api_gateway.invoke_url
 }
 
 module "cloudfront" {
@@ -35,10 +35,9 @@ module "api_gateway" {
 }
 module "s3_audio" {
   source      = "./modules/s3_audio"
-  bucket_name = "tts-audio-bucket-009-azubi-africa"
+  bucket_name = "tts-audio-bucket-priscillaon-azubi-africa"
   environment = "dev"
 }
-
 
  
 

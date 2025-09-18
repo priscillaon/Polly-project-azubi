@@ -1,20 +1,20 @@
 .signin .nav-link:hover{
-    color: blue;
+    color: rgb(0, 213, 255);
     font-weight: 700;
     text-decoration: underline;
 }
 
 .pricing .nav-link:hover{
-    color: blue;
+    color: rgb(0, 213, 255);
     font-weight: 700;
 }
 
 .item .nav-link:hover{
-    color: blue;
+    color: rgb(0, 234, 255);
     font-weight: 700;
 }
 
 .home .nav-link:hover{
-    color: blue;
+    color: rgb(0, 251, 255);
     font-weight: 700;
 }

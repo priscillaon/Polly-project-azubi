@@ -14,18 +14,18 @@ variable "handler" {
   default     = "lambda_function.lambda_handler"
 }
 
-variable "platform" {
+variable "runtime" {
   description = "Runtime for the Lambda function"
   type        = string
   default     = "python3.11"
 }
 
-variable "sourcepath" {
+variable "source_path" {
   description = "Path to Lambda deployment package (zip file)"
   type        = string
 }
 
-variable "environmnt" {
+variable "environment" {
   description = "Environment variables to set for the Lambda function"
   type        = map(string)
   default     = {}
